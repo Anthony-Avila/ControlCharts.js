@@ -3,6 +3,12 @@
 charting libraries that offered the look and feel of my favorite Desktop SPC application, I decided to start working on my own. This 
 project is currently still in development, but this version does work (with very few features) and may be useful in your projects.
 
+### Demo
+You can view the examples included in the project by visiting here: 
+[Demo](http://qchub.com/controlchartsjs/ "Demo Page")
+
+
+
 # Documentation
 Solid documenation still needs to be built, but isn't worth working on yet as I still plan to add several more options to the Control 
 Charts. For now, this library can be played with by doing the following:
