@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>Control Chart Example</TITLE>
+
+<STYLE>
+body {
+    /* I use this to prevent the text on the svg image
+    from being highlighted when selecting points on the 
+    chart */ 
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+</STYLE>
+<script src="../controlchart.js"></script>
+</HEAD>
+<BODY>
+  <DIV ID="Chart1" style="position: relative;float: left;"></DIV>
+  <SCRIPT type="text/javascript">
+  Chart1 = new ControlChart({
+    ChartID: "Chart1", 
+    DivID: "Chart1", 
+    Label: "Feature # 1", 
+    Nominal: 1.555, 
+    UpperLimit: 1.570, 
+    LowerLimit: 1.540, 
+    ChartWidth: 440, 
+    ChartHeight: 240
+  });
+  Chart1.AddMeasurements([1.5617,1.5668,1.5639,1.5546,1.5574,1.5646,1.5600]);
+  </SCRIPT>
+</BODY>
+</HTML>

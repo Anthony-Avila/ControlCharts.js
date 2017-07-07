@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<TITLE>Control Chart Example</TITLE>
+
+<STYLE>
+body {
+    /* I use this to prevent the text on the svg image
+    from being highlighted when selecting points on the 
+    chart */ 
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+</STYLE>
+<script src="../controlchart.js"></script>
+<SCRIPT type="text/javascript">
+
+function AddPoint()
+{
+  for ( i in ControlChartIndex )
+  {
+    var min = 1.57,
+        max = 1.54,
+        v = Math.random() * (max - min) + min;
+
+	   window[ControlChartIndex[i]].AddMeasurement(v);
+  }
+}
+
+var is_streaming = false;
+function Stream()
+{
+	if ( is_streaming == false )
+	{
+    is_streaming = setInterval(AddPoint, 100);
+    document.getElementById("steam_btn").innerHTML = "Stop Stream";
+	} else {
+		clearInterval(is_streaming);
+		is_streaming = false;
+    document.getElementById("steam_btn").innerHTML = "Start Stream";
+	}
+	
+}
+
+</SCRIPT>
+</HEAD>
+<BODY>
+
+<!-- CHART # 1 -->
+<DIV ID="Chart1" style="position: relative;float: left;"></DIV>
+<SCRIPT type="text/javascript">
+  Chart1 = new ControlChart({
+    ChartID: "Chart1", 
+    DivID: "Chart1", 
+    Label: "Feature # 1", 
+    Nominal: 1.555, 
+    UpperLimit: 1.570, 
+    LowerLimit: 1.540,
+    ChartWidth: 440, 
+    ChartHeight: 240
+  });
+  Chart1.DrawChart();
+</SCRIPT>
+
+<div style="clear: both;"></div>
+<hr>
+
+<button onclick="AddPoint()">Add A Point</button>
+<button id="steam_btn" onclick="Stream()">Start Stream</button>
+<hr>
+
+
+
+</BODY>
+</HTML>
