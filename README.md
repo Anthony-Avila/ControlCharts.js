@@ -1,11 +1,12 @@
 # ControlCharts.js
 **ControlCharts.js** is a lightweight JavaScript Library for creating interactive Control Charts. Unable to find any existing JavaScript 
 charting libraries that offered the look and feel of my favorite Desktop SPC application, I decided to start working on my own. This 
-project is currently still in development, but this version does work (with very few features) and may be useful in your projects.
+project is currently still in development, but the current version does work (with limited features) and may be useful in your projects.
 
 ### Demo
 You can view the examples included in the project by visiting here: 
-[Demo](http://qchub.com/controlchartsjs/ "Demo Page")
+[Demo](http://qchub.com/controlchartsjs/ "Demo Page"). To see an example webapp using this Library, you can go here 
+[Here](http://qchub.com/controlchartsjs/ "Webapp Demo").
 
 
 
@@ -15,7 +16,7 @@ Charts. For now, this library can be played with by doing the following:
 
 #### Add the Library to HEAD
 ```
-<script src="controlchart.js"></script>
+<script src="path/to/controlchart.js"></script>
 ```
 #### Add a DIV for the Control Chart
 ```
@@ -39,6 +40,22 @@ Charts. For now, this library can be played with by doing the following:
 </SCRIPT>
 ```
 
+# Version: 1.1
+###This Version fixed the following bugs:###
+  + **Fixed Bug in Control Charts** - Somepoint before the original release, I was using the full size of the chart 
+      to represent the within-spec region of the data. When I updated it to have 10% padding on top/bottom, I failed 
+      to add that padding in the function that determines where to place datapoints on the chart. I have corrected that
+      in the version.
+
+###This Version add the following features:###
+  + **Webapp Example** - A new example has been added in the example folder, which demonstrates how to use ControlCharts.js
+      to build SPC Webapps. The example has a lot of advanced features not found in the other examples, which should work 
+      well to get any developer started in building awesome webapps with ControlCharts.js
+
+  + The **SelectionHook** paramater adds functionality to the Highlight Feature. You are now able to pass a function to 
+       the Control Charts that will execute whenever a user selects a range of points. A nice example of its use can be 
+       found on the webapp example.
+
 # Version: 1.0
 This is only my initial code, proving the concept of Interactive Control Charts in JavaScript. It is mostly proof of UI 
 and offers no value other than displaying data (the interactivity is tied to no function(s) yet).
@@ -52,5 +69,5 @@ still change color. There is an off-by-one error somewhere..
 2. Add Options for Customizing Chart Colors
 3. Add Options for Customizing Control Limit %'s
 4. Allow Max/Min, and Nom +/- tolerance modes
-5. Add Functionality to the hightlight feature
+5. ~~Add Functionality to the hightlight feature~~
 6. Refactor Code

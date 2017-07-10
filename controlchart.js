@@ -1,16 +1,18 @@
 //////////////////////////////////////////////
 /// ControlCharts.js
-///------------------
+///----------------------
+/// Version: 1.1 (Beta)
+///----------------------
 /// This JavaScript Library is used for creating 
 /// Control Charts using SVG elements. This file has
 /// two sections:
-/// (1) Global Variables & Event Listeners
+/// (1) Global Variables & Function
 /// (2) The ControlChart object
 
 
 
 //////////////////////////////////////////////
-//// (1) Global Variables & Event Listeners
+//// (1) Global Variables & Functions
 
 var mousedown = 0;
 var ControlChartIndex = Array();
@@ -28,10 +30,12 @@ function CCJS_ClearCharts(chart_id_excp)
     }
   }
 }
+
 //////////////////////////////////////////////
 //// (2) The ControlChart object
 
 var ControlChart = function (objIni) {
+  //Required Paramaters
   this.ID            = objIni.ChartID;
   this.DIV           = objIni.DivID;
   this.Label         = objIni.Label;
@@ -47,13 +51,18 @@ var ControlChart = function (objIni) {
   this.selected_pt2  = 0;
   this.mousedown     = 0;
   this.points        = Array();
+  this.values        = Array();
   ControlChartIndex[ControlChartIndex.length] = objIni.ChartID;
+
+  if ( objIni.SelectionHook ) {
+    this.SelectionHook = objIni.SelectionHook;
+  }
 
 };
 
-
 ControlChart.prototype.AddMeasurement = function(val) {
   this.points[this.points.length] = this.TranslateValue(val);
+  this.values[(this.points.length-1)] = parseFloat(val);
   this.GenerateChart();
   this.DrawChart();
 }
@@ -62,6 +71,7 @@ ControlChart.prototype.AddMeasurements = function(vals) {
   for ( val in vals )
   {
     this.points[this.points.length] = this.TranslateValue(vals[val]);
+    this.values[(this.points.length-1)] = parseFloat(vals[val]);
   }
   this.GenerateChart();
   this.DrawChart();
@@ -125,7 +135,7 @@ ControlChart.prototype.GenerateChart = function() {
 
 		svg_img += "<a style=\"cursor: pointer;\" onmouseover=\"javascript: "+this.ID+".overlay_line('"+xpos+"', "+(Number(point)+1)+");\" onmousedown=\""+this.ID+".click_point('"+xpos+"', "+(Number(point)+1)+");\">";
 		svg_img += "<rect x=\""+(xpos-(pt_offset/2))+"\" y=\"0\" fill=\"#fff\" opacity=\"0\" width=\""+pt_offset+"\" height=\""+this.Height+"\" \/>";
-		svg_img += "<circle cx=\""+xpos+"\" cy=\""+this.points[point]+"\" r=\"4\" stroke=\"white\" stroke-width=\"1\" fill=\"white\" id=\""+this.ID+"_plot_point_"+Number(point)+"\" onclick=\"alert(this.id);\" \/>";
+		svg_img += "<circle cx=\""+xpos+"\" cy=\""+this.points[point]+"\" r=\"4\" stroke=\"white\" stroke-width=\"1\" fill=\"white\" id=\""+this.ID+"_plot_point_"+Number(point)+"\" onclick=\"\" \/>";
 		svg_img += "</a>";
 
 		if (xpos > 5)
@@ -154,6 +164,7 @@ ControlChart.prototype.GenerateChart = function() {
 
 ControlChart.prototype.overlay_line = function(xpos, rec) {
   this.sticky = rec;
+  this.selected_pt2 = rec;
   tst_chart = document.getElementById(this.DIV+"_ChartOverlay");
   this.EraseOverlay();
 
@@ -293,6 +304,7 @@ ControlChart.prototype.DrawChart = function(x, p) {
 		window[mousedown_target].mousedown = 0;
 		window[mousedown_target].stickypos=-1;
 		window[mousedown_target].sticky=0;
+		window[mousedown_target].SelectionHook();
 	}
 }
 
@@ -323,26 +335,27 @@ ControlChart.prototype.EraseHL = function() {
 
 ControlChart.prototype.TranslateValue = function(ActualMeasurement)
 {
-
+	offset = this.Height*0.1;
+	working_height = this.Height*0.8;
 	ypixel = 0;
+
 	if ( ActualMeasurement > this.Nominal )
 	{
 		PercentFromNominal = (ActualMeasurement - this.Nominal) / (this.MaxTolerance - this.Nominal);
-		PercentFromNominal = PercentFromNominal * 100;
-		ypixel = (this.Height/2) - PercentFromNominal;
+		ypixel = ((working_height/2) - ((working_height/2) * PercentFromNominal));
 
 	} else if (ActualMeasurement < this.Nominal)
 	{
 		PercentFromNominal = (this.Nominal - ActualMeasurement) / (this.Nominal - this.MaxTolerance);
-		PercentFromNominal = PercentFromNominal * 100;
-		ypixel = (this.Height/2) + (PercentFromNominal * -1);
+		ypixel = ((working_height/2) + ((working_height/2) * (PercentFromNominal * -1)));
 
 	} else if (ActualMeasurement == this.Nominal)
 	{
 		PercentFromNominal = 0;
-		ypixel = (this.Height/2);
+		ypixel = (working_height/2);
 	}
+
+	ypixel = Math.round(ypixel+offset);
 
 	return ypixel;
 }
-

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>WebApp Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="../controlchart.js"></script>
+  <script src="vendor/SPCTools.js"></script>
+
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+
+    .tbl_a {
+      text-align: right;
+      float: left;
+      padding: 5px;
+      border-bottom: 1px solid transparent;
+      background: ;
+      font-weight: bold;
+    }
+    .tbl_b {
+      float: left;
+      border-bottom: 1px solid black;
+      padding: 5px;
+      background: ;
+    }
+
+    .well-title {
+        width: 100%;
+        height: 100%;
+        min-height: 20px;
+        padding: 4px;
+        background-color: #337ab7;
+        border: 1px solid #1C1C1C;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+        font-weight: bold;
+        color: snow;
+        border-bottom: 0px;
+    }
+
+    .well-under-cell {
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+        border-color: #1C1C1C;
+        border-top-color: #000;
+        position: relative;
+    }
+
+    .well-under {
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+        border-color: #1C1C1C;
+        border-top-color: #9DA2A9;
+        position: relative;
+        border: 0px;
+        z-index: 1;
+    }
+
+    .chart-img {
+      padding: 0px;
+    }
+
+    .well-overlay {
+        padding: 5px;
+        color:snow;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        height: 30%;
+        background: rgb(0, 0, 0);
+        background: rgba(0, 0, 0, 0.7);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .ccjs_logo {
+    font-family: Helvetica;
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: #FFF;
+     -webkit-text-fill-color: #A5C1E9; /* Will override color (regardless of order) */
+     -webkit-text-stroke-width: 1px;
+     -webkit-text-stroke-color: #337ab7;
+    }
+
+    svg {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-2 sidenav hidden-xs" id="left_panel" style="border-right: 1px solid black;">
+      <h2 class="ccjs_logo">ControlCharts.js</h2>
+      <h4>WebApp UI Example</h4>
+      <hr>
+
+      <div class="form-group">
+        <label for="sel1">Load Example Data:</label>
+        <select class="form-control" id="frm_DataSource" onchange="LoadData()">
+          <option value="ipod">iPod Finished Product (11 Dims)</option>
+          <option value="large">Large Data Source (100 Dims)</option>
+        </select>
+      </div>
+
+      <center><img src="images/ipod_dims.png" style="max-width: 100%;" id="data_print"></center>
+      <div style="padding: 5px;margin-bottom: 10px;border-bottom: 1px solid black"></div>
+
+      <table class="table">
+        <tr>
+          <th colspan="2" id="qwk_st_label">Dimension Label</th>
+        </tr>
+        <tr>
+          <th># pts:</th>
+          <td id="qwk_st_numpts"></td>
+        </tr>
+        <tr>
+          <th>Avg:</th>
+          <td id="qwk_st_avg"></td>
+        </tr>
+        <tr>
+          <th>Max:</th>
+          <td id="qwk_st_max"></td>
+        </tr>
+        <tr>
+          <th>Min:</th>
+          <td id="qwk_st_min"></td>
+        </tr>
+        <tr>
+          <th>Range:</th>
+          <td id="qwk_st_range"></td>
+        </tr>
+        <tr>
+          <th>Cpk:</th>
+          <td id="qwk_st_cpk"></td>
+        </tr>
+      </table>
+
+    </div>
+    <br>
+    
+    <div class="col-sm-10">
+
+      <div class="well-title">
+        Data Source Information <span class="glyphicon glyphicon-info-sign pull-right" style="cursor: pointer;" aria-hidden="true" data-toggle="modal" data-target="#myModal"></span>
+      </div>
+      <div class="well well-under-cell">
+        <div class="row">
+          <div class="col-md-1 tbl_a">Part Number:</div>
+          <div class="col-md-6 tbl_b" id="ds_partnumber">Loading...</div>
+          <div class="col-md-1 tbl_a">Revision:</div>
+          <div class="col-md-1 tbl_b" id="ds_revision">Loading..</div>
+          <div class="col-md-1 tbl_a">Machine #:</div>
+          <div class="col-md-1 tbl_b" id="ds_machine">Loading..</div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartA1" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartA2" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartA3" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartA4" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartB1" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartB2" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartB3" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartB4" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartC1" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartC2" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartC3" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="well-title">
+            Loading Dimension..
+          </div>
+          <div class="well well-under chart-img">
+              <DIV ID="ChartC4" style="position: relative;float: left;"></DIV> 
+          </div>
+        </div>
+      </div>
+
+      <center>
+      <ul class="pagination pagination-lg" id="pagination-bar">
+        <li class="disabled"><a href="#">Prev</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li class="disabled"><a href="#">2</a></li>
+        <li class="disabled"><a href="#">3</a></li>
+        <li class="disabled"><a href="#">4</a></li>
+        <li class="disabled"><a href="#">5</a></li>
+        <li class="disabled"><a href="#">6</a></li>
+        <li class="disabled"><a href="#">7</a></li>
+        <li class="disabled"><a href="#">8</a></li>
+        <li class="disabled"><a href="#">9</a></li>
+        <li class="disabled"><a href="#">Next</a></li>
+      </ul>
+      </center>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">ControlCharts.js App Implementation Demo</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <h4>Disclaimer:</h4>
+          <b>This is an Example of ControlCharts.js being used in a WebApp</b>! The code found within this 
+          file is <i>not</i> part of ControlCharts.js, but rather an example of a simple webapp that 
+          <i>makes use</i> of ControlCharts.js With that said, any and all parties are free to use, and/or 
+          modify this webapp for their own use. Please beware However, there are no plans to further expand 
+          on this webapp, and it is not officially supported. If there are bugs, I will try to fix them but 
+          it will be very low priority (my focus is on improving the ControlCharts.js Library). No features 
+          are in development. If you use this code as the base for a webapp, I'd appreciate a link back to 
+          the repo, but it is not required.
+        </p>
+        <p>
+          <h4>Building a Better WebApp:</h4>
+          I feel the base I have provided will give any developer a great foundation for building an SPC
+          webapp. All the base required UI elements should be available between the ControlCharts.js Library 
+          and this example webapp. The key to building a solid app will come in the ability to build impressive 
+          back-end (server) solutions for providing data. If you are looking for a developer for creating great 
+          spc webapps or software, feel free to contact me at <a href="http://anthonymavila.com">anthonymavila.com</a>.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<script>
+var panel_width = 0;
+var panel_height = 0;
+var current_page = 1;
+var local_data = {};
+var grid = ["ChartA1","ChartA2","ChartA3","ChartA4",
+            "ChartB1","ChartB2","ChartB3","ChartB4",
+            "ChartC1","ChartC2","ChartC3","ChartC4"];
+
+function SetUpScreen()
+{
+  full_height = $( window ).height();
+
+  $("#left_panel").height(full_height);
+
+  $( ".chart-img" ).each(function( index, element ) {
+    panel_width = $( element ).width();
+    panel_height = panel_width / 2;
+    $( element ).height(panel_height);
+  });
+
+}
+
+function LoadData()
+{
+
+    p = $("#frm_DataSource").val();
+    $.getJSON( "datasource.php?p="+p, function( json ) {
+      local_data = json;
+      $("#ds_partnumber").html(json["Part Number"]);
+      $("#ds_revision").html(json["Revision"]);
+      $("#ds_machine").html(json["Machine"]);
+      $("#data_print").attr("src", "images/"+p+"_dims.png");
+      LoadPage(1);
+      CreatePagination(json["Dimensions"].length, 1);
+    });
+
+}
+
+function CreatePagination(dimensions, active_page)
+{
+
+  pages = Math.ceil(dimensions/12);
+  page_num = 0;
+
+  if ( active_page > 1 ) {
+    html = "<li class=\"\"><a href=\"#\" onclick=\"LoadPage("+(active_page-1)+")\">Prev</a></li>";
+  } else {
+    html = "<li class=\"disabled\"><a href=\"#\">Prev</a></li>";
+  }
+
+  for(i=0;i<120;i=i+12)
+  {
+    page_num++;
+    if( page_num <= pages ) {
+      if ( page_num == active_page ) {
+        html += "<li class=\"active\"><a href=\"#\">"+page_num+"</a></li>";
+      } else {
+        html += "<li class=\"\"><a href=\"#\" onclick=\"LoadPage("+page_num+")\">"+page_num+"</a></li>";
+      }
+    } else {
+      html += "<li class=\"disabled\"><a href=\"#\">"+page_num+"</a></li>";
+    }
+
+  }
+
+  if ( active_page < pages ) {
+    html += "<li class=\"\"><a href=\"#\" onclick=\"LoadPage("+(active_page+1)+")\">Next</a></li>";
+  } else {
+    html += "<li class=\"disabled\"><a href=\"#\">Next</a></li>";
+  }
+
+  $("#pagination-bar").html(html);
+}
+
+function LoadPage(page_number)
+{
+    hookfunc = function()
+    {
+       spc = new SPCTools();
+
+       numpts = Math.abs(this.selected_pt2 - this.selected_pt1);
+
+       selected_vals = [];
+       for ( i = 0;i<numpts+1;i++)
+       {
+         selected_vals[i] = this.values[(i+Math.min(this.selected_pt1, this.selected_pt2)-1)];
+       }
+       console.log(selected_vals);
+       $("#qwk_st_label").html(this.Label);
+       $("#qwk_st_numpts").html(numpts+1);
+       $("#qwk_st_avg").html(spc.ToFixed(spc.GetAverage(selected_vals), 4));
+       $("#qwk_st_max").html(spc.ToFixed(spc.GetMax(selected_vals), 4));
+       $("#qwk_st_min").html(spc.ToFixed(spc.GetMin(selected_vals), 4));
+       $("#qwk_st_range").html(spc.ToFixed(spc.GetRange(selected_vals), 4));
+       $("#qwk_st_cpk").html(spc.GetCpk(this.MaxTolerance, this.MinTolerance, selected_vals));
+       //alert(this.selected_pt1+" - "+this.selected_pt2)
+    }
+
+  WipeGrid();
+  first_dim = (page_number-1) * 12;
+  if ( first_dim < 1 ) { page_number = 1; }
+  dim_step = 0;
+
+  //Clear Out all Active Charts in the Index..
+  delete(ControlChartIndex);
+  ControlChartIndex = Array();
+
+  for (i=first_dim;i<(first_dim+12);i++)
+  {
+
+    if ( i >= local_data["Dimensions"].length ) { continue; }
+
+    chart_id = grid[dim_step];//local_data["Dimensions"][i]["ChartID"];
+
+          window[chart_id] = new ControlChart({
+            ChartID: chart_id, 
+            DivID: chart_id, 
+            Label: local_data["Dimensions"][i]["Label"], 
+            Nominal: local_data["Dimensions"][i]["Nom"], 
+            UpperLimit: local_data["Dimensions"][i]["Max"], 
+            LowerLimit: local_data["Dimensions"][i]["Min"], 
+            ChartWidth: panel_width, 
+            ChartHeight: panel_height,
+            SelectionHook: hookfunc
+          });
+
+      window[chart_id].AddMeasurements(local_data["Dimensions"][i]["Vals"]);
+      $("#"+chart_id).parent().prev().html("("+(Number(i)+1)+") "+local_data["Dimensions"][i]["Label"]);
+      //$("#"+chart_id);
+      dim_step++;
+  }
+  CreatePagination(local_data["Dimensions"].length, page_number);
+
+}
+
+  function WipeGrid()
+  {
+    for ( g in grid )
+    {
+      $("#"+grid[g]).html("");
+      $("#"+grid[g]).parent().prev().html("");
+    }
+  }
+
+SetUpScreen();
+LoadData();
+
+
+</script>
+
+</body>
+</html>
