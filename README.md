@@ -6,7 +6,9 @@ project is currently still in development, but the current version does work (wi
 ### Demo
 You can view the examples included in the project by visiting here: 
 [Demo](http://qchub.com/controlchartsjs/ "Demo Page"). To see an example webapp using this Library, you can go here 
-[Here](http://qchub.com/controlchartsjs/ "Webapp Demo").
+[Here](http://qchub.com/ControlCharts.js/examples/webapp.htm "Webapp Demo").
+
+![WebApp Demo Image](http://qchub.com/ControlCharts.js/examples/images/ScreenShot.png)
 
 
 
@@ -41,13 +43,13 @@ Charts. For now, this library can be played with by doing the following:
 ```
 
 # Version: 1.1
-###This Version fixed the following bugs:###
+### This Version fixed the following bugs:
   + **Fixed Bug in Control Charts** - Somepoint before the original release, I was using the full size of the chart 
       to represent the within-spec region of the data. When I updated it to have 10% padding on top/bottom, I failed 
       to add that padding in the function that determines where to place datapoints on the chart. I have corrected that
       in the version.
 
-###This Version add the following features:###
+### This Version add the following features:
   + **Webapp Example** - A new example has been added in the example folder, which demonstrates how to use ControlCharts.js
       to build SPC Webapps. The example has a lot of advanced features not found in the other examples, which should work 
       well to get any developer started in building awesome webapps with ControlCharts.js
