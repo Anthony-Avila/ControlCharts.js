@@ -5,10 +5,10 @@ project is currently still in development, but the current version does work (wi
 
 ### Demo
 You can view the examples included in the project by visiting here: 
-[Demo](http://qchub.com/controlchartsjs/ "Demo Page"). To see an example webapp using this Library, you can go here 
-[Here](http://qchub.com/ControlCharts.js/examples/webapp.htm "Webapp Demo").
+[Demo](http://controlchartsjs.qchub.com/ControlCharts.js/examples/index.htm "Demo Page"). To see an example webapp using this Library, you can go here 
+[Here](http://cpkcalculator.com "Webapp Demo").
 
-![WebApp Demo Image](http://qchub.com/ControlCharts.js/examples/images/ScreenShot.png)
+![WebApp Demo Image](http://controlchartsjs.qchub.com/images/controlchart.png)
 
 
 
